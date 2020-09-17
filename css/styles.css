@@ -4,19 +4,24 @@
 .d-none {
   display: none;
 }
-#custom-select {
+.custom-select {
   position: relative;
   display: inline-block;
   width: 8rem;
   border: 1px solid black;
 }
-#select-items {
+.select-items {
   position: absolute;
   width: 8rem;
   border: 1px solid black;
   margin-left: -1px;
   background-color: white;
 }
-#select-selected, .select-item {
+.select-selected, .select-item {
   padding: 0 0.2rem;
+}
+.down-caret, .up-caret {
+  height: 1rem;
+  position: absolute;
+  right: 0.2rem;
 }
