@@ -1,2 +1,2 @@
 # wc-custom-select
-Vanilla JavaScript custom select element — Web Components version.
+Custom select element — Web Component version.
