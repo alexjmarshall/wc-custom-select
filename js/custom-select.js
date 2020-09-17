@@ -21,7 +21,8 @@ class CustomSelect extends HTMLElement {
 
 window.onload = () => {
   customElements.define('custom-select', CustomSelect);
-};
+   //
+}
 
 function initCustomSelect(select) {
   buildSelect(select);
@@ -29,7 +30,7 @@ function initCustomSelect(select) {
   let customSel = select.parentElement;
   customSel.addEventListener('click', onCustomSelClick);
   customSel.addEventListener('keydown', onCustomSelKeydown);
-  document.addEventListener('click', hideItemList(customSel));
+  document.addEventListener('click', () => hideItemList(customSel));
 }
 
 function onCustomSelClick(e) {
