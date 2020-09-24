@@ -21,7 +21,6 @@ class CustomSelect extends HTMLElement {
 
 window.onload = () => {
   customElements.define('custom-select', CustomSelect);
-   //
 }
 
 function initCustomSelect(select) {
@@ -35,28 +34,29 @@ function initCustomSelect(select) {
 
 function onCustomSelClick(e) {
   e.stopPropagation();
-
   toggleSelect(this);
 }
 
 function onCustomSelKeydown(e) {
   e.stopPropagation();
-  
   let items = this.querySelector('.select-items');
   
   if(e.keyCode === 13 || e.keyCode === 0 || e.keyCode === 32) { //enter or spacebar
     e.preventDefault();
-
     onCustomSelClick.call(this, e);
+
   } else if(e.keyCode === 27) { //escape
     hideItemList(this);
+
   } else if(e.keyCode === 40 || e.keyCode === 38) { //down or up arrow
     e.preventDefault();
 
     if(!items.classList.contains('d-none'))
       focusFirstItem(this);
+
     else if(e.keyCode === 40) //down arrow
       clickNextItem(this, 'down');
+      
     else
       clickNextItem(this, 'up');
   }
@@ -65,10 +65,9 @@ function onCustomSelKeydown(e) {
 function toggleSelect(customSel) {
   let items = customSel.querySelector('.select-items');
 
-  if(items.classList.contains('d-none'))
-    showItemList(customSel);
-  else 
-    hideItemList(customSel);
+  items.classList.contains('d-none')
+    ? showItemList(customSel)
+    : hideItemList(customSel);
 }
 
 function showItemList(customSel) {
@@ -99,9 +98,9 @@ function buildSelect(select) {
   //clear selected and items from custom select
   let customSel = select.parentElement;
   let selected = customSel.querySelector('.select-selected');
-  if(selected) selected.remove();
+  selected && selected.remove();
   let selectItems = customSel.querySelector('.select-items');
-  if(selectItems) selectItems.remove();
+  selectItems && selectItems.remove();
 
   //create new div for selected item
   selected = document.createElement('div');
@@ -119,8 +118,7 @@ function buildSelect(select) {
 
   //create a new div for each item
   for (i = 0; i < select.length; i++) {
-    if(!select.options[i].value)
-      continue; //skip if option has no value
+    if(!select.options[i].value) continue; //skip if option has no value
 
     let item = document.createElement('div');
     let option = select.options[i]
@@ -133,10 +131,9 @@ function buildSelect(select) {
     item.setAttribute('tabindex', '0');
     item.setAttribute('role', 'option');
     
-    if(i === select.selectedIndex)
-      item.setAttribute('aria-selected', true);
-    else
-      item.setAttribute('aria-selected', false);
+    i === select.selectedIndex
+      ? item.setAttribute('aria-selected', true)
+      : item.setAttribute('aria-selected', false);
 
     item.addEventListener('click', onItemClick);
     item.addEventListener('keydown', onItemKeydown);
@@ -182,8 +179,7 @@ function getElementSiblings(elm) {
   let sib = elm.parentElement.firstChild;
 
   while(sib) {
-    if(sib !== elm)
-      sibs.push(sib);
+    sib !== elm && sibs.push(sib);
     sib = sib.nextElementSibling;
   }
 
@@ -197,21 +193,21 @@ function onItemKeydown(e) {
 
   if(e.keyCode === 13) { //enter
     e.preventDefault();
-
     this.click();
+
   } else if (e.keyCode === 27) { //escape
     customSel.click();
     customSel.focus();
+
   } else if (e.keyCode === 40) { //down arrow
     e.preventDefault();
-
     nextItem = this.nextElementSibling;
-    if(nextItem) nextItem.focus();
+    nextItem && nextItem.focus();
+
   } else if (e.keyCode === 38) { //up arrow
     e.preventDefault();
-
     prevItem = this.previousElementSibling;
-    if(prevItem) prevItem.focus();
+    prevItem && prevItem.focus();
   }
 }
 
@@ -229,13 +225,14 @@ function clickNextItem(customSel, direction) {
   if(!selectedItem) { 
     items.querySelector(':first-child').click();
     customSel.click();
+
   } else {
     if(direction === 'down' && selectedItem.nextElementSibling) {
-      if(selectedItem)
-        selectedItem.nextElementSibling.click();
-      else
-      items.querySelector(':first-child').click();
+      selectedItem 
+        ? selectedItem.nextElementSibling.click()
+        : items.querySelector(':first-child').click();
       customSel.click();
+
     } else if(direction === 'up' && selectedItem.previousElementSibling){
       selectedItem.previousElementSibling.click();
       customSel.click();
