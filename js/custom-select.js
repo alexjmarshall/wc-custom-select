@@ -1,7 +1,6 @@
 class CustomSelect extends HTMLElement {
   constructor() {
     super();
-
     const template = document.querySelector('template');
     const clone = document.importNode(template.content, true);
     this.attachShadow({ mode: 'open' });         
@@ -14,7 +13,6 @@ class CustomSelect extends HTMLElement {
     let host = this.shadowRoot.getRootNode().host;
     let options = host.querySelectorAll('option');
     select.append(...options);
-
     initCustomSelect(select);
   }
 }
@@ -25,7 +23,6 @@ window.onload = () => {
 
 function initCustomSelect(select) {
   buildSelect(select);
-    
   let customSel = select.parentElement;
   customSel.addEventListener('click', onCustomSelClick);
   customSel.addEventListener('keydown', onCustomSelKeydown);
@@ -40,23 +37,17 @@ function onCustomSelClick(e) {
 function onCustomSelKeydown(e) {
   e.stopPropagation();
   let items = this.querySelector('.select-items');
-  
   if(e.keyCode === 13 || e.keyCode === 0 || e.keyCode === 32) { //enter or spacebar
     e.preventDefault();
     onCustomSelClick.call(this, e);
-
   } else if(e.keyCode === 27) { //escape
     hideItemList(this);
-
   } else if(e.keyCode === 40 || e.keyCode === 38) { //down or up arrow
     e.preventDefault();
-
     if(!items.classList.contains('d-none'))
       focusFirstItem(this);
-
     else if(e.keyCode === 40) //down arrow
       clickNextItem(this, 'down');
-      
     else
       clickNextItem(this, 'up');
   }
@@ -64,7 +55,6 @@ function onCustomSelKeydown(e) {
 
 function toggleSelect(customSel) {
   let items = customSel.querySelector('.select-items');
-
   items.classList.contains('d-none')
     ? showItemList(customSel)
     : hideItemList(customSel);
@@ -74,7 +64,6 @@ function showItemList(customSel) {
   customSel.setAttribute('aria-expanded', 'true');
   let items = customSel.querySelector('.select-items');
   items.classList.remove('d-none');
-
   //toggle display of caret icons
   let downCaret = customSel.querySelector('#down-caret');
   downCaret.classList.add('d-none');
@@ -86,7 +75,6 @@ function hideItemList(customSel) {
   customSel.setAttribute('aria-expanded', 'false');
   let items = customSel.querySelector('.select-items');
   items.classList.add('d-none');
-
   //toggle display of caret icons
   let downCaret = customSel.querySelector('#down-caret');
   downCaret.classList.remove('d-none');
@@ -101,7 +89,6 @@ function buildSelect(select) {
   selected && selected.remove();
   let selectItems = customSel.querySelector('.select-items');
   selectItems && selectItems.remove();
-
   //create new div for selected item
   selected = document.createElement('div');
   selected.innerHTML = select.options[select.selectedIndex].innerHTML;
@@ -109,17 +96,14 @@ function buildSelect(select) {
   selected.classList.add('select-selected');
   customSel.appendChild(selected);
   customSel.setAttribute('aria-labelledby', selected.id);
-
   //create a new div for the item list
   selectItems = document.createElement('div');
   selectItems.id = 'select-items';
   selectItems.classList.add('select-items');
   selectItems.setAttribute('role', 'listbox');
-
   //create a new div for each item
   for (i = 0; i < select.length; i++) {
     if(!select.options[i].value) continue; //skip if option has no value
-
     let item = document.createElement('div');
     let option = select.options[i]
     let value = option.value;
@@ -148,7 +132,6 @@ function buildSelect(select) {
 
 function onItemClick(e) {
   e.stopPropagation();
-
   let clickedItem = this;
   //add aria-selected to this item and remove it from the others
   clickedItem.setAttribute('aria-selected', true);
@@ -157,8 +140,6 @@ function onItemClick(e) {
     item.setAttribute('aria-selected', false);
 
   let customSel = clickedItem.closest('.custom-select');
-  customSel.setAttribute('aria-activedescendant', clickedItem.id);
-
   //update selectedIndex of backing select and text of selected div
   let select = customSel.querySelector('select');
   let selected = customSel.querySelector('.select-selected');
@@ -169,7 +150,6 @@ function onItemClick(e) {
       break;
     }
   }
-
   customSel.click();
   customSel.focus();
 }
@@ -177,33 +157,26 @@ function onItemClick(e) {
 function getElementSiblings(elm) {
   let sibs = [];
   let sib = elm.parentElement.firstChild;
-
   while(sib) {
     sib !== elm && sibs.push(sib);
     sib = sib.nextElementSibling;
   }
-
   return sibs;
 }
 
 function onItemKeydown(e) {
   e.stopPropagation();
-
   let customSel = this.closest('.custom-select');
-
   if(e.keyCode === 13) { //enter
     e.preventDefault();
     this.click();
-
   } else if (e.keyCode === 27) { //escape
     customSel.click();
     customSel.focus();
-
   } else if (e.keyCode === 40) { //down arrow
     e.preventDefault();
     nextItem = this.nextElementSibling;
     nextItem && nextItem.focus();
-
   } else if (e.keyCode === 38) { //up arrow
     e.preventDefault();
     prevItem = this.previousElementSibling;
@@ -225,14 +198,12 @@ function clickNextItem(customSel, direction) {
   if(!selectedItem) { 
     items.querySelector(':first-child').click();
     customSel.click();
-
   } else {
     if(direction === 'down' && selectedItem.nextElementSibling) {
       selectedItem 
         ? selectedItem.nextElementSibling.click()
         : items.querySelector(':first-child').click();
       customSel.click();
-
     } else if(direction === 'up' && selectedItem.previousElementSibling){
       selectedItem.previousElementSibling.click();
       customSel.click();
